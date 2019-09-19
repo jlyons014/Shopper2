@@ -2,6 +2,7 @@ package com.example.shopper;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -70,5 +71,13 @@ public class DBHandler extends SQLiteOpenHelper {
 
         //close the reference to the shopper database
         db.close();
+    }
+
+    public Cursor getShoppingLists(){
+
+        SQLiteDatabase db = getWritableDatabase();
+
+
+        return db.rawQuery("SELECT * FROM " + TABLE_SHOPPING_LIST, null);
     }
 }
