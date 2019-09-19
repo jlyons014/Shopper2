@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -27,6 +28,7 @@ public class CreateList extends AppCompatActivity {
     EditText nameEditText;
     EditText storeEditText;
     EditText dateEditText;
+    DBHandler dbHandler;
 
     Calendar calendar;
     @Override
@@ -80,11 +82,28 @@ public class CreateList extends AppCompatActivity {
                         calendar.get(Calendar.DAY_OF_MONTH)        ).show();
             }
         });
+        dbHandler = new DBHandler(this, null);
 
     }
 
     public void createList (MenuItem menuItem) {
 
+        //get data input in EditTexts and store it in strings
+        String name = nameEditText.getText().toString();
+        String store = storeEditText.getText().toString();
+        String date = dateEditText.getText().toString();
+
+        //trim Strings and see if any are equal to an empty string
+        if (name.trim().equals("") || (store.trim().equals("")) || date.trim().equals("")) {
+            //required data hasn't been input, so display toast
+            Toast.makeText(this, "Please enter a name, store, and date!", Toast.LENGTH_LONG).show();
+
+        } else {
+            //required data has been input, update the database and display a different toast
+            dbHandler.addShoppingList(name, store, date);
+            Toast.makeText(this, "Shopping List added!", Toast.LENGTH_LONG).show();
+
+        }
     }
 
 
@@ -115,6 +134,8 @@ public class CreateList extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
 
         }
+
+
     }
 
     public void updateDueDate() {
