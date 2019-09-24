@@ -9,63 +9,44 @@ import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.AdapterView;
-import android.widget.ListView;
+import android.view.View;
 
+public class ViewList extends AppCompatActivity {
 
-public class MainActivity extends AppCompatActivity {
-
-    //declare an intent
     Intent intent;
 
-    //declare a db handler
+    //fields used to get shopping list id passed from main activity
+    long  id;
+    Bundle bundle;
+
     DBHandler dbHandler;
 
-    //declare shopping lists cursor adapter
-    ShoppingLists shoppingListsAdapter;
-
-    //declare a listView
-    ListView shopperListView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_view_list);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        //initialize the dbHandler
-        dbHandler = new DBHandler(this,null);
+        //get the id
+        bundle = this.getIntent().getExtras();
+        id = bundle.getLong("_id");
 
-        //initialize the listview
-        shopperListView = (ListView) findViewById(R.id.shopperListView);
+        dbHandler = new DBHandler(this, null);
 
-        //initialize shopping lists cursor adapter
-        shoppingListsAdapter = new ShoppingLists(this, dbHandler.getShoppingLists(), 0);
+        //call database method that returns shopping list name
+        String shoppingListName = dbHandler.getShoppingListName((int)id);
 
-        //set shopping lists cursor adapter on listview
-        shopperListView.setAdapter(shoppingListsAdapter);
-
-        //set onItemClickListener to shopper ListView
-        shopperListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                //launch the view list activity and sending the id of the
-                //shopping list
-                intent = new Intent(MainActivity.this, ViewList.class);
-                intent.putExtra("_id", id);
-                startActivity(intent);
-            }
-        });
-
+        //set title of this activity to shopping list name
+        this.setTitle(shoppingListName);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_view_list, menu);
         return true;
     }
 
@@ -79,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
 
-    //getting the ID of the item that was selected
+        //getting the ID of the item that was selected
         switch (item.getItemId()) {
             case R.id.action_home :
                 // initializing an intent for the main activity, starting it,
@@ -100,9 +81,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void openCreateList(View view) {
-        // initializing an intent for the create list activity and starting it
-        intent = new Intent(this, CreateList.class);
-        startActivity(intent);
+
+    public void openAddItem(View view) {
     }
+
+
+
 }
