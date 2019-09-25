@@ -90,7 +90,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
         //create sql string that will get the shopping list name
         String query = "SELECT * FROM " + TABLE_SHOPPING_LIST +
-                " WHERE " + COLUMN_LIST_ID + " + " + id;
+                " WHERE " + COLUMN_LIST_ID + " = " + id;
 
         //execute select statement and store result in cursor
         Cursor cursor = db.rawQuery(query, null);
@@ -103,6 +103,8 @@ public class DBHandler extends SQLiteOpenHelper {
             //store it in the String that will be returned by the method
             dbString = cursor.getString(cursor.getColumnIndex("name"));
         }
+
+        db.close();
 
         return dbString;
     }
